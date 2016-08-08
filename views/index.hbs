@@ -9,10 +9,16 @@
 window.onload = function() {
  // var socket = io.connect('http://localhost:3000/');
  	var socket = io();
-    webgazer.setRegression('ridge') /* currently must set regression and tracker */
+    webgazer.setRegression('weightedRidge') /* currently must set regression and tracker */
         .setTracker('clmtrackr')
         .setGazeListener(function(data, clock) {
-           	socket.emit('gaze', data);      
+            //console.log(data)
+            if(data){
+            var xprediction = data.x;
+            var yprediction = data.y;
+            }
+            
+            socket.emit('gaze', data, clock);    
         })
         .begin()
         .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
@@ -70,8 +76,8 @@ window.onload = function() {
 
 
 window.onbeforeunload = function() {
-    webgazer.end(); //Uncomment if you want to save the data even if you reload the page.
-    //window.localStorage.clear(); //Comment out if you want to save data across different sessions 
+    //webgazer.end(); //Uncomment if you want to save the data even if you reload the page.
+    window.localStorage.clear(); //Comment out if you want to save data across different sessions 
 }
 </script>
 
