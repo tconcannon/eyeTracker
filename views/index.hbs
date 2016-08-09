@@ -9,19 +9,19 @@
 window.onload = function() {
  // var socket = io.connect('http://localhost:3000/');
  	var socket = io();
-    webgazer.setRegression('weightedRidge') /* currently must set regression and tracker */
-        .setTracker('clmtrackr')
+    //webgazer.setRegression('ridge')  currently must set regression and tracker 
+        webgazer.setTracker('clmtrackr')
         .setGazeListener(function(data, clock) {
             //console.log(data)
             if(data){
-            var xprediction = data.x;
-            var yprediction = data.y;
-            }
+            // var xprediction = data.x;
+            // var yprediction = data.y;
+            socket.emit('gaze', data, clock);}
             
-            socket.emit('gaze', data, clock);    
+                
         })
         .begin()
-        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
+        //.showPredictionPoints(false); /* shows a square every 100 milliseconds where current prediction is */
 
     var width = 320;
     var height = 240;

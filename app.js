@@ -63,9 +63,15 @@ io.on('connection', function(socket){
       // console.log(xAvg,'x arr')
       // console.log(yAvg,'y arr')
     setTimeout(function(){if(data && data.y && data.x){
-      robot.moveMouse(data.x, data.y);  
+      //robot.moveMouse(data.x, data.y);  
+      var lastpos=robot.getMousePos()
+      setInterval(function(){
+      console.log(data.x,data.y, 'eye')
+      console.log(lastpos.x,lastpos.y,'mouse')
+    },100)
+      
       }
-    },60000)
+    },1000)
   //}
    // },1000)
     // y = height * Math.sin((twoPI * x) / width) + height;
