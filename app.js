@@ -28,57 +28,21 @@ app.use('/', routes);
 app.use('/users', users);
 var robot = require("robotjs");
 //Speed up the mouse.
-robot.setMouseDelay(2);
 
-var twoPI = Math.PI * 2.0;
 var screenSize = robot.getScreenSize();
 var height = screenSize.height;
 var width = screenSize.width;
 
-console.log(height,'height')
-console.log(width, 'width')
 io.on('connection', function(socket){
-  var x =[];
-  var y =[];
-  var xAvg;
-  var yAvg;
   socket.on('gaze', function(data){
-   // console.log(data, 'data')
-    // console.log(x.length, 'x l')
-    // console.log(y.length, 'y l')
-  
-    //Move the mouse across the screen as a sine wave.
-   // setInterval(function(){
-      //  if(data && data.x && data.y){
-      //   x.push(data.x)
-      //   y.push(data.y)
-      
-      // var length=x.length;
-      // xAvg=x.reduce(function(a,b){
-      //   return a+b;
-      // })/length;
-      // yAvg=y.reduce(function(a,b){
-      //   return a+b;
-      // })/length;
-      // console.log(xAvg,'x arr')
-      // console.log(yAvg,'y arr')
-    setTimeout(function(){if(data && data.y && data.x){
-      //robot.moveMouse(data.x, data.y);  
-      var lastpos=robot.getMousePos()
-      setInterval(function(){
-      console.log(data.x,data.y, 'eye')
-      console.log(lastpos.x,lastpos.y,'mouse')
-    },100)
-      
+      if(data){
+        robot.moveMouse(data.x, data.y); 
+        //robot.moveMouse(data.x, data.y);  
+        var lastpos=robot.getMousePos()
+        console.log(data.x, lastpos.x,'x')
+        console.log(data.y, lastpos.y,'y')
       }
-    },1000)
-  //}
-   // },1000)
-    // y = height * Math.sin((twoPI * x) / width) + height;
-    // if(data && data.y && data.x){
-    //   robot.moveMouse(xAvg, yAvg);  
-    // }
-    
+        
   })
 })
 

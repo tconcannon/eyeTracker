@@ -9,19 +9,23 @@
 window.onload = function() {
  // var socket = io.connect('http://localhost:3000/');
  	var socket = io();
-    //webgazer.setRegression('ridge')  currently must set regression and tracker 
-        webgazer.setTracker('clmtrackr')
+    
+    //webgazer.removeMouseEventListeners()
+    //console.log(this.clickListener)
+    // if(webgazer.clickListener){
+    //     console.log('true')
+    // }
+    //webgazer.setRegression('ridge')  //currently must set regression and tracker 
+    webgazer.setTracker('clmtrackr')
         .setGazeListener(function(data, clock) {
-            //console.log(data)
-            if(data){
-            // var xprediction = data.x;
-            // var yprediction = data.y;
-            socket.emit('gaze', data, clock);}
-            
-                
+            setTimeout(function(){
+            webgazer.removeMouseEventListeners()
+            console.log(data,'data')
+            socket.emit('gaze', data, clock)
+            },60000)         
         })
         .begin()
-        //.showPredictionPoints(false); /* shows a square every 100 milliseconds where current prediction is */
+        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          
 
     var width = 320;
     var height = 240;

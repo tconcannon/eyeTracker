@@ -10402,6 +10402,7 @@ if (typeof exports !== 'undefined') {
      * records click data and passes it to the regression model
      */
     var clickListener = function(event) {
+    	console.log('clickListener')
         recordScreenPosition(event.clientX, event.clientY, eventTypes[0]); // eventType[0] === 'click'
     }
 
@@ -10409,6 +10410,7 @@ if (typeof exports !== 'undefined') {
      * records mouse movement data and passes it to the regression model
      */
     var moveListener = function(event) {
+    	console.log('moveListener')
         if (paused) {
             return;
         }
