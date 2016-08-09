@@ -48,25 +48,26 @@ io.on('connection', function(socket){
     // console.log(y.length, 'y l')
   
     //Move the mouse across the screen as a sine wave.
-    setInterval(function(){
-       if(data && data.x && data.y){
-        x.push(data.x)
-        y.push(data.y)
+   // setInterval(function(){
+      //  if(data && data.x && data.y){
+      //   x.push(data.x)
+      //   y.push(data.y)
       
-      var length=x.length;
-      xAvg=x.reduce(function(a,b){
-        return a+b;
-      })/length;
-      yAvg=y.reduce(function(a,b){
-        return a+b;
-      })/length;
+      // var length=x.length;
+      // xAvg=x.reduce(function(a,b){
+      //   return a+b;
+      // })/length;
+      // yAvg=y.reduce(function(a,b){
+      //   return a+b;
+      // })/length;
       // console.log(xAvg,'x arr')
       // console.log(yAvg,'y arr')
-      if(data && data.y && data.x){
-      //robot.moveMouse(xAvg, yAvg);  
-    }
-  }
-    },1000)
+    setTimeout(function(){if(data && data.y && data.x){
+      robot.moveMouse(data.x, data.y);  
+      }
+    },60000)
+  //}
+   // },1000)
     // y = height * Math.sin((twoPI * x) / width) + height;
     // if(data && data.y && data.x){
     //   robot.moveMouse(xAvg, yAvg);  
