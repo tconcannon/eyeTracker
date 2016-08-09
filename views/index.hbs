@@ -15,16 +15,15 @@ window.onload = function() {
     // if(webgazer.clickListener){
     //     console.log('true')
     // }
-    //webgazer.setRegression('ridge')  //currently must set regression and tracker 
-    webgazer.setTracker('clmtrackr')
-        .setGazeListener(function(data, clock) {
+    webgazer.setRegression('ridge')  //currently must set regression and tracker 
+            .setTracker('clmtrackr')
+            .setGazeListener(function(data, clock) {
             setTimeout(function(){
             webgazer.removeMouseEventListeners()
-            console.log(data,'data')
+            webgazer.showPredictionPoints(false)
             socket.emit('gaze', data, clock)
-            },5000)
-            //socket.emit('gaze', data, clock)
-                    
+            },30000) 
+            socket.emit('calibration',data)                   
         })
         .begin()
         .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          

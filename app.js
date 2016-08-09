@@ -37,22 +37,30 @@ var y=[];
 io.on('connection', function(socket){
   socket.on('gaze', function(data, clock){
       if(data){
-        // x.push(data.x)
-        // y.push(data.y)
-        // setInterval(function(){
-        //   console.log(x,'x')
-        //   console.log(y,'y')
-        //   // x=[];
-        //   // y=[];
-        // },500)
-        robot.moveMouse(data.x, data.y); 
-        robot.moveMouse(data.x, data.y); 
-        console.log(clock) 
-        var lastpos=robot.getMousePos()
-        console.log(data.x, 'eye x', lastpos.x,'mouse x')
-        console.log(data.y, 'eye y', lastpos.y,'mouse y')
+         x.push(data.x)
+         y.push(data.y)
+         if(x.length===20){
+           var xAvg=x.reduce(function(a,b){
+            return a+b
+           })/x.length;
+           var yAvg=y.reduce(function(a,b){
+            return a+b
+           })/x.length;
+           console.log(xAvg,yAvg)
+           robot.moveMouseSmooth(xAvg,yAvg)
+           x=[];
+           y=[];
+         }
       }
         
+  })
+  socket.on('calibration', function(data){
+    if(data){
+      mousePos=robot.getMousePos()
+      xOff=mousePos.x-x.data;
+      yOff=mousePos.y-y.data;
+      console.log(xOff,yOff)
+    }
   })
 })
 
