@@ -22,7 +22,9 @@ window.onload = function() {
             webgazer.removeMouseEventListeners()
             console.log(data,'data')
             socket.emit('gaze', data, clock)
-            },60000)         
+            },5000)
+            //socket.emit('gaze', data, clock)
+                    
         })
         .begin()
         .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          
