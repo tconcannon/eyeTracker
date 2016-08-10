@@ -34,6 +34,21 @@ var height = screenSize.height;
 var width = screenSize.width;
 var x=[];
 var y=[];
+var xOff=0;
+var yOff=0;
+
+///calibation
+robot.moveMouseSmooth(0,0)
+setTimeout(function(){
+  robot.moveMouseSmooth(width-20,0)
+},1000)
+setTimeout(function(){
+  robot.moveMouseSmooth(width-20,height-20)
+},2000)
+setTimeout(function(){
+  robot.moveMouseSmooth(0,height-20)
+},3000)
+
 io.on('connection', function(socket){
   socket.on('gaze', function(data, clock){
       if(data){
@@ -46,7 +61,7 @@ io.on('connection', function(socket){
            var yAvg=y.reduce(function(a,b){
             return a+b
            })/x.length;
-           console.log(xAvg,yAvg)
+           console.log(xAvg,yAvg, 'averages')
            robot.moveMouseSmooth(xAvg,yAvg)
            x=[];
            y=[];
@@ -56,14 +71,21 @@ io.on('connection', function(socket){
   })
   socket.on('calibration', function(data){
     if(data){
+      // if(robot.mouseClick()){
+      //   console.log('clicked')
+      // }
       mousePos=robot.getMousePos()
-      xOff=mousePos.x-x.data;
-      yOff=mousePos.y-y.data;
-      console.log(xOff,yOff)
+      xOff=mousePos.x-data.x;
+      yOff=mousePos.y-data.y;
+      // console.log(xOff,yOff, 'offsets')
+      // console.log(data.x,mousePos.x,'x')
+      // console.log(data.y,mousePos.y,'y')
     }
   })
 })
-
+// addEventListener("click", function(){
+//         console.log('clicked')
+//       })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
