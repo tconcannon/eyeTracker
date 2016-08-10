@@ -12,6 +12,8 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -39,13 +41,13 @@ console.log(height,'height')
 console.log(width, 'width')
 io.on('connection', function(socket){
   socket.on('gaze', function(data){
-    console.log(data, 'data')
+    //console.log(data, 'data')
     //Move the mouse across the screen as a sine wave.
  
     // y = height * Math.sin((twoPI * x) / width) + height;
-    if(data && data.y && data.x){
-      robot.moveMouse(data.x, data.y);  
-    }
+    // if(data && data.y && data.x){
+    //   robot.moveMouse(data.x, data.y);  
+    // }
     
   })
 })
@@ -80,6 +82,87 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+});
+
+// For arduino stuff
+var serialport = require('serialport');
+var portName = 'COM5';
+var sp = new serialport.SerialPort(portName, {
+    baudRate: 9600,
+    dataBits: 8,
+    parity: 'none',
+    stopBits: 1,
+    flowControl: false,
+    parser: serialport.parsers.readline("\r\n")
+});
+
+sp.on('data', function(input) {
+  //console.log(input);
+
+  // For calibration testing
+  if (input === "left_click") {
+    var position = getMousePos();
+    console.log(position);
+  }
+
+  // if (input === "mouse") {
+  //   robot.mouseClick();
+  // }
+  // if (input === "left_click") {
+  //   robot.mouseToggle("down");
+  // }
+  // if (input === "left_unclick") {
+  //   robot.mouseToggle("up");
+  // }
+  // if (input === "right_click") {
+  //   robot.mouseToggle("down", "right");
+  // }
+  // if (input === "right_unclick") {
+  //   robot.mouseToggle("up", "right");
+  // }
+  // if (input < 300 && input > 150) {
+  //   robot.scrollMouse(1, "down");  
+  // }
+  // if (input < 150) {
+  //   robot.scrollMouse(3, "down");
+  // }
+  // if (input > 600 && input < 850) {
+  //   robot.scrollMouse(1, "up");
+  // }
+  // if (input > 850) {
+  //   robot.scrollMouse(3, "up");
+  // }
+
+  // THIS SEEMED TO BREAK MY COMPUTER BUT WHY?
+  // switch (input) {
+  //   case "left_click":
+  //     robot.mouseToggle("down");
+  //     break;
+  //   case "left_unclick":
+  //     robot.mouseToggle("up");
+  //     break;
+  //   case "right_click":
+  //     robot.mouseToggle("down", "right");
+  //     break;
+  //   case "right_unclick":
+  //     robot.mouseToggle("down", "right");
+  //     break;
+  //   case (input < 300 && input > 150):
+  //     robot.scrollMouse(1, "down");
+  //     break;
+  //   case (input < 150):
+  //     robot.scrollMouse(3, "down");
+  //     break;
+  //   case (input > 600 && input < 850):
+  //     robot.scrollMouse(1, "up");
+  //     break;
+  //   case (input > 850):
+  //     robot.scrollMouse(3, "up");
+  //     break;
+  //   default:
+  //     break;
+  // }
+  
 });
 
 
