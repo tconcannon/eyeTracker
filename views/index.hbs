@@ -9,13 +9,24 @@
 window.onload = function() {
  // var socket = io.connect('http://localhost:3000/');
  	var socket = io();
-    webgazer.setRegression('ridge') /* currently must set regression and tracker */
-        .setTracker('clmtrackr')
-        .setGazeListener(function(data, clock) {
-           	socket.emit('gaze', data);      
+    
+    //webgazer.removeMouseEventListeners()
+    //console.log(this.clickListener)
+    // if(webgazer.clickListener){
+    //     console.log('true')
+    // }
+    webgazer.setRegression('ridge')  //currently must set regression and tracker 
+            .setTracker('clmtrackr')
+            .setGazeListener(function(data, clock) {
+            setTimeout(function(){
+            webgazer.removeMouseEventListeners()
+            //webgazer.showPredictionPoints(false)
+            socket.emit('gaze', data, clock)
+            },30000) 
+            socket.emit('calibration',data)                   
         })
         .begin()
-        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
+        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          
 
     var width = 320;
     var height = 240;
@@ -70,8 +81,8 @@ window.onload = function() {
 
 
 window.onbeforeunload = function() {
-    webgazer.end(); //Uncomment if you want to save the data even if you reload the page.
-    //window.localStorage.clear(); //Comment out if you want to save data across different sessions 
+    //webgazer.end(); //Uncomment if you want to save the data even if you reload the page.
+    window.localStorage.clear(); //Comment out if you want to save data across different sessions 
 }
 </script>
 
