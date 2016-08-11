@@ -4,7 +4,7 @@ const ipc = require('electron').ipcMain
 const app = electron.app;
 //const robot = require('robotjs');
 //const screenSize = robot.getScreenSize();
-
+const socket=io();
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
