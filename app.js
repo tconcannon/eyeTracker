@@ -54,7 +54,7 @@ var yOff=0;
 io.on('connection', function(socket){
   socket.on('gaze', function(data, clock){
       if(data){
-        robot.moveMouse(data.x,data.y)
+        //robot.moveMouse(data.x,data.y)
         console.log('moce')
          // x.push(data.x)
          // y.push(data.y)

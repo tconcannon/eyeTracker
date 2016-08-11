@@ -18,13 +18,26 @@
 			</footer>
 		</div>
 		<script src="./public/webgazer.js" type="text/javascript" ></script>
+		<script src="socket.io-client/socket.io.js"></script>
+		<script>
+			document.addEventListener("keydown", function (e) {
+				e.which = (e.which) ? e.which : e.key
+				if (e.which === 123 || e.which === 38) {
+					require('remote').getCurrentWindow().toggleDevTools();
+				} else if (e.which === 116) {
+					// location.reload();
+
+					require('remote').getCurrentWindow().toggleDevTools();
+				}
+			});
+		</script>
 		<script>
 		// This is your "client side" script
 
 
 		window.onload = function() {
 		 // var socket = io.connect('http://localhost:3000/');
-			// 	var socket = io();
+			//var socket = io();
 			// ipc takes the place of socket
 			const ipc = require('electron').ipcRenderer
 			//const robot=require('roboyjs')
@@ -39,10 +52,10 @@
 		            setTimeout(function(){
 		            webgazer.removeMouseEventListeners()
 		            //webgazer.showPredictionPoints(false)
-								
-								ipc.send('gaze', data, clock)
+								socket.emit('gaze',data)
+								//ipc.send('gaze', data, clock)
 		            },30000) 
-		            ipc.send('calibration', data)                   
+		            //ipc.send('calibration', data)                   
 		        })
 		        .begin()
 		        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          
@@ -104,13 +117,7 @@
 		    window.localStorage.clear(); //Comment out if you want to save data across different sessions 
 		}
 		
-		document.addEventListener("keydown", function (e) {
-			if (e.which === 123) {
-				require('remote').getCurrentWindow().toggleDevTools();
-			} else if (e.which === 116) {
-				location.reload();
-			}
-		});
+		
 		</script>
 	</body>
 	
