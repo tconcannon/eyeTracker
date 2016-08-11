@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Eye Thing</title>
-		<link rel="stylesheet" href="index.css">
+		<link rel="stylesheet" href="public/stylesheets/index.css">
 	</head>
 	<body>
 		<div class="container">
@@ -15,20 +15,101 @@
 			</section>
 			<footer></footer>
 		</div>
+		<script src="./public/webgazer.js" type="text/javascript" ></script>
 		<script>
-			// This is your client side script
+		// This is your "client side" script
+
+
+		window.onload = function() {
+		 // var socket = io.connect('http://localhost:3000/');
+			// 	var socket = io();
+			// ipc takes the place of socket
 			const ipc = require('electron').ipcRenderer
+		    
+		    //webgazer.removeMouseEventListeners()
+		    //console.log(this.clickListener)
+		    // if(webgazer.clickListener){
+		    //     console.log('true')
+		    // }
+		    webgazer.setRegression('ridge')  //currently must set regression and tracker 
+		            .setTracker('clmtrackr')
+		            .setGazeListener(function(data, clock) {
+		            setTimeout(function(){
+		            webgazer.removeMouseEventListeners()
+		            //webgazer.showPredictionPoints(false)
+								
+								ipc.send('gaze', data, clock)
+		             socket.emit('gaze', data, clock)
+		            },30000) 
+		            ipc.send('calibration', data)                   
+		        })
+		        .begin()
+		        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          
 
-			const asyncMsgBtn = document.getElementById('async-msg')
+		    var width = 320;
+		    var height = 240;
+		    var topDist = '0px';
+		    var leftDist = '0px';
+		    
+		    var setup = function() {
+		        var video = document.getElementById('webgazerVideoFeed');
+		        video.style.display = 'block';
+		        video.style.position = 'absolute';
+		        video.style.top = topDist;
+		        video.style.left = leftDist;
+		        video.width = width;
+		        video.height = height;
+		        video.style.margin = '0px';
 
-			asyncMsgBtn.addEventListener('click', function () {
-			  ipc.send('asynchronous-message', 'ping')
-			})
+		        webgazer.params.imgWidth = width;
+		        webgazer.params.imgHeight = height;
 
-			ipc.on('asynchronous-reply', function (event, arg) {
-			  const message = `Asynchronous message reply: ${arg}`
-			  document.getElementById('async-reply').innerHTML = message
-			})
+		        var overlay = document.createElement('canvas');
+		        overlay.id = 'overlay';
+		        overlay.style.position = 'absolute';
+		        overlay.width = width;
+		        overlay.height = height;
+		        overlay.style.top = topDist;
+		        overlay.style.left = leftDist;
+		        overlay.style.margin = '0px';
+
+		        document.body.appendChild(overlay);
+
+		        var cl = webgazer.getTracker().clm;
+
+		        function drawLoop() {
+		            requestAnimFrame(drawLoop);
+		            overlay.getContext('2d').clearRect(0,0,width,height);
+		            if (cl.getCurrentPosition()) {
+		                cl.draw(overlay);
+		            }
+		        }
+		        drawLoop();
+		    };
+
+		    function checkIfReady() {
+		        if (webgazer.isReady()) {
+		            setup();
+		        } else {
+		            setTimeout(checkIfReady, 100);
+		        }
+		    }
+		    setTimeout(checkIfReady,100);
+		};
+
+
+		window.onbeforeunload = function() {
+		    //webgazer.end(); //Uncomment if you want to save the data even if you reload the page.
+		    window.localStorage.clear(); //Comment out if you want to save data across different sessions 
+		}
+		
+		document.addEventListener("keydown", function (e) {
+			if (e.which === 123) {
+				require('remote').getCurrentWindow().toggleDevTools();
+			} else if (e.which === 116) {
+				location.reload();
+			}
+		});
 		</script>
 	</body>
 	

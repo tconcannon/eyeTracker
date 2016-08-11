@@ -17,9 +17,10 @@ function onClosed() {
 
 function createMainWindow() {
 	const win = new electron.BrowserWindow({
-		width: 600,
-		height: 400,
-		frame: false
+		width: 1024,
+		height: 800,
+		frame: false,
+		transparent: true
 	});
 
 	win.loadURL(`file://${__dirname}/index.html`);
@@ -49,6 +50,6 @@ app.on('ready', () => {
 // Event handler for the gaze message (just like the socket version)
 // 
 ipc.on('gaze', (event, arg) => {
-  
+  console.log("[gaze received]");
   
 });
