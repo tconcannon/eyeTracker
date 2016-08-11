@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-var robot = require("robotjs");
+var robot = require("robotjs-browser");
 //Speed up the mouse.
 
 var screenSize = robot.getScreenSize();
@@ -39,46 +39,49 @@ var y=[];
 var xOff=0;
 var yOff=0;
 
-///calibation
-robot.moveMouseSmooth(0,0)
-setTimeout(function(){
-  robot.moveMouseSmooth(width-20,0)
-},1000)
-setTimeout(function(){
-  robot.moveMouseSmooth(width-20,height-20)
-},2000)
-setTimeout(function(){
-  robot.moveMouseSmooth(0,height-20)
-},3000)
+// ///calibation
+// robot.moveMouseSmooth(0,0)
+// setTimeout(function(){
+//   robot.moveMouseSmooth(width-20,0)
+// },1000)
+// setTimeout(function(){
+//   robot.moveMouseSmooth(width-20,height-20)
+// },2000)
+// setTimeout(function(){
+//   robot.moveMouseSmooth(0,height-20)
+// },3000)
 
 io.on('connection', function(socket){
   socket.on('gaze', function(data, clock){
       if(data){
-         x.push(data.x)
-         y.push(data.y)
-         if(x.length===20){
-           var xAvg=x.reduce(function(a,b){
-            return a+b
-           })/x.length;
-           var yAvg=y.reduce(function(a,b){
-            return a+b
-           })/x.length;
-           console.log(xAvg,yAvg, 'averages')
-           robot.moveMouseSmooth(xAvg,yAvg)
-           x=[];
-           y=[];
-         }
+        robot.moveMouse(data.x,data.y)
+        console.log('moce')
+         // x.push(data.x)
+         // y.push(data.y)
+          
+        // if(x.length===20){
+        //    var xAvg=x.reduce(function(a,b){
+        //     return a+b
+        //    })/x.length;
+        //    var yAvg=y.reduce(function(a,b){
+        //     return a+b
+        //    })/x.length;
+        //    robot.moveMouse(xAvg,yAvg)
+        //   //  console.log(xAvg,yAvg, 'averages')
+        //   //  var mousePos = robot.getMousePos();
+        //   //  console.log(mousePos.x);
+        //   // console.log(mousePos.y)
+        //    //robot.moveMouseSmooth(xAvg,yAvg)
+        //    x=[];
+        //    y=[];
+        //  }
       }
         
   })
   socket.on('calibration', function(data){
     if(data){
-      // if(robot.mouseClick()){
-      //   console.log('clicked')
-      // }
-      mousePos=robot.getMousePos()
-      xOff=mousePos.x-data.x;
-      yOff=mousePos.y-data.y;
+      //mousePos=robot.getMousePos()
+     // console.log(mousePos.x,mousePos.y,'mouse')
       // console.log(xOff,yOff, 'offsets')
       // console.log(data.x,mousePos.x,'x')
       // console.log(data.y,mousePos.y,'y')
@@ -120,86 +123,58 @@ app.use(function(err, req, res, next) {
   });
 });
 
-// For arduino stuff
-var serialport = require('serialport');
-var portName = 'COM5';
-var sp = new serialport.SerialPort(portName, {
-    baudRate: 9600,
-    dataBits: 8,
-    parity: 'none',
-    stopBits: 1,
-    flowControl: false,
-    parser: serialport.parsers.readline("\r\n")
-});
+// // For arduino stuff
+// var serialport = require('serialport');
+// var portName = 'COM5';
+// var sp = new serialport.SerialPort(portName, {
+//     baudRate: 9600,
+//     dataBits: 8,
+//     parity: 'none',
+//     stopBits: 1,
+//     flowControl: false,
+//     parser: serialport.parsers.readline("\r\n")
+// });
 
-sp.on('data', function(input) {
-  //console.log(input);
+// sp.on('data', function(input) {
+//   //console.log(input);
 
-  // For calibration testing
-  if (input === "left_click") {
-    var position = getMousePos();
-    console.log(position);
-  }
+//   // For calibration testing
+//   if (input === "left_click") {
+//     var position = getMousePos();
+//     console.log(position);
+//   }
 
-  // if (input === "mouse") {
-  //   robot.mouseClick();
-  // }
-  // if (input === "left_click") {
-  //   robot.mouseToggle("down");
-  // }
-  // if (input === "left_unclick") {
-  //   robot.mouseToggle("up");
-  // }
-  // if (input === "right_click") {
-  //   robot.mouseToggle("down", "right");
-  // }
-  // if (input === "right_unclick") {
-  //   robot.mouseToggle("up", "right");
-  // }
-  // if (input < 300 && input > 150) {
-  //   robot.scrollMouse(1, "down");  
-  // }
-  // if (input < 150) {
-  //   robot.scrollMouse(3, "down");
-  // }
-  // if (input > 600 && input < 850) {
-  //   robot.scrollMouse(1, "up");
-  // }
-  // if (input > 850) {
-  //   robot.scrollMouse(3, "up");
-  // }
+//   // if (input === "mouse") {
+//   //   robot.mouseClick();
+//   // }
+//   // if (input === "left_click") {
+//   //   robot.mouseToggle("down");
+//   // }
+//   // if (input === "left_unclick") {
+//   //   robot.mouseToggle("up");
+//   // }
+//   // if (input === "right_click") {
+//   //   robot.mouseToggle("down", "right");
+//   // }
+//   // if (input === "right_unclick") {
+//   //   robot.mouseToggle("up", "right");
+//   // }
+//   // if (input < 300 && input > 150) {
+//   //   robot.scrollMouse(1, "down");  
+//   // }
+//   // if (input < 150) {
+//   //   robot.scrollMouse(3, "down");
+//   // }
+//   // if (input > 600 && input < 850) {
+//   //   robot.scrollMouse(1, "up");
+//   // }
+//   // if (input > 850) {
+//   //   robot.scrollMouse(3, "up");
+//   // }
 
-  // THIS SEEMED TO BREAK MY COMPUTER BUT WHY?
-  // switch (input) {
-  //   case "left_click":
-  //     robot.mouseToggle("down");
-  //     break;
-  //   case "left_unclick":
-  //     robot.mouseToggle("up");
-  //     break;
-  //   case "right_click":
-  //     robot.mouseToggle("down", "right");
-  //     break;
-  //   case "right_unclick":
-  //     robot.mouseToggle("down", "right");
-  //     break;
-  //   case (input < 300 && input > 150):
-  //     robot.scrollMouse(1, "down");
-  //     break;
-  //   case (input < 150):
-  //     robot.scrollMouse(3, "down");
-  //     break;
-  //   case (input > 600 && input < 850):
-  //     robot.scrollMouse(1, "up");
-  //     break;
-  //   case (input > 850):
-  //     robot.scrollMouse(3, "up");
-  //     break;
-  //   default:
-  //     break;
-  // }
+
   
-});
+// });
 
 
 module.exports = {
