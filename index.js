@@ -2,6 +2,8 @@
 const electron = require('electron');
 const ipc = require('electron').ipcMain
 const app = electron.app;
+//const robot = require('robotjs');
+//const screenSize = robot.getScreenSize();
 
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
@@ -17,8 +19,8 @@ function onClosed() {
 
 function createMainWindow() {
 	const win = new electron.BrowserWindow({
-		width: 1024,
-		height: 800,
+		width: 800,
+		height: 1000,
 		frame: false,
 		transparent: true
 	});
