@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-var robot = require("robotjs-browser");
+var robot = require("robotjs");
 //Speed up the mouse.
 
 var screenSize = robot.getScreenSize();
