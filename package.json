@@ -1,0 +1,45 @@
+{
+  "name": "eyething",
+  "productName": "Eyething",
+  "version": "0.0.0",
+  "description": "My praiseworthy app",
+  "license": "MIT",
+  "repository": "joshpaulchan/eyething",
+  "author": {
+    "name": "joshpaulchan",
+    "email": "joshpaulchan@gmail.com",
+    "url": "null"
+  },
+  "scripts": {
+    "test": "xo",
+    "start": "electron .",
+    "build": "electron-packager . --out=dist --app-version=$npm_package_version --prune --asar --overwrite --all"
+  },
+  "files": [
+    "index.js",
+    "index.html",
+    "index.css"
+  ],
+  "keywords": [
+    "electron-app",
+    "electron"
+  ],
+  "dependencies": {
+    "electron-debug": "^1.0.0",
+    "robotjs": "^0.4.4",
+    "serialport": "^4.0.1"
+  },
+  "devDependencies": {
+    "devtron": "^1.1.0",
+    "electron-packager": "^7.0.0",
+    "electron-prebuilt": "^1.0.1",
+    "xo": "^0.15.0"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
+  }
+}
