@@ -36,66 +36,51 @@ var robot = require("robotjs");
 var screenSize = robot.getScreenSize();
 var height = screenSize.height;
 var width = screenSize.width;
-var x=[];
-var y=[];
-var xOff=0;
-var yOff=0;
-
-// ///calibation
-// robot.moveMouseSmooth(0,0)
-// setTimeout(function(){
-//   robot.moveMouseSmooth(width-20,0)
-// },1000)
-// setTimeout(function(){
-//   robot.moveMouseSmooth(width-20,height-20)
-// },2000)
-// setTimeout(function(){
-//   robot.moveMouseSmooth(0,height-20)
-// },3000)
-
+// var x=[];
+// var y=[];
+var circleBuffer=function(size){
+  this.items=[];
+  this.maxSize=size;
+  this.replacementIndex=0;
+  this.full=false;
+}
+circleBuffer.prototype.push=function(item){
+  this.full=false;
+  if(this.items.length<this.maxSize){
+    this.items.push(item)
+  }
+  else{
+    this.full=true;
+    this.items[this.replacementIndex]=item
+    this.replacementIndex++
+    if(this.replacementIndex===this.maxSize){
+      this.replacementIndex=0
+    }
+  }
+}
+var pos = new circleBuffer(50);
 io.on('connection', function(socket){
   socket.on('gaze', function(data, clock){
       if(data){
+
+        pos.push([data.x,data.y])
+        if(pos.full){
         //var mouse = robot.getMousePos()
-        //console.log(mouse.x,mouse.y,'mouse')
-        //console.log('test')
-        robot.moveMouse(data.x,data.y)
-        //console.log('moce')
-         // x.push(data.x)
-         // y.push(data.y)
-          
-        // if(x.length===20){
-        //    var xAvg=x.reduce(function(a,b){
-        //     return a+b
-        //    })/x.length;
-        //    var yAvg=y.reduce(function(a,b){
-        //     return a+b
-        //    })/x.length;
-        //    robot.moveMouse(xAvg,yAvg)
-        //   //  console.log(xAvg,yAvg, 'averages')
-        //   //  var mousePos = robot.getMousePos();
-        //   //  console.log(mousePos.x);
-        //   // console.log(mousePos.y)
-        //    //robot.moveMouseSmooth(xAvg,yAvg)
-        //    x=[];
-        //    y=[];
-        //  }
+        if(pos.replacementIndex){
+        var mouseX = pos.items[pos.replacementIndex][0]*.8
+        var mouseY = pos.items[pos.replacementIndex][1]*.8  
+        }
+        else{
+          var mouseX = pos.items[0][0]*.8;
+          var mouseY = pos.items[0][1]*.8
+        }
+        robot.moveMouse(mouseX,mouseY);
+        }
+        
       }
         
   })
-  socket.on('calibration', function(data){
-    if(data){
-      //mousePos=robot.getMousePos()
-     // console.log(mousePos.x,mousePos.y,'mouse')
-      // console.log(xOff,yOff, 'offsets')
-      // console.log(data.x,mousePos.x,'x')
-      // console.log(data.y,mousePos.y,'y')
-    }
-  })
 })
-// addEventListener("click", function(){
-//         console.log('clicked')
-//       })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

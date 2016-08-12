@@ -26,8 +26,11 @@ function createMainWindow() {
 	});
 
 	win.maximize();
-	// win.setIgnoreMouseEvents(true);
-
+	//window.TIME for globally
+	setTimeout(function(){
+		win.setIgnoreMouseEvents(true);
+	},60000)
+	
 	win.loadURL(`file://${__dirname}/index.html`);
 	win.on('closed', onClosed);
 

@@ -46,7 +46,7 @@
 		    // if(webgazer.clickListener){
 		    //     console.log('true')
 		    // }
-		    webgazer.setRegression('ridge')  //currently must set regression and tracker 
+		    webgazer.setRegression('weightedRidge')  //currently must set regression and tracker 
 		            .setTracker('clmtrackr')
 		            .setGazeListener(function(data, clock) {
 		            setTimeout(function(){
@@ -54,8 +54,9 @@
 		            //webgazer.showPredictionPoints(false)
 								socket.emit('gaze',data)
 								//ipc.send('gaze', data, clock)
-		            },30000) 
-		            //ipc.send('calibration', data)                   
+		            },60000) 
+		            //console.log(data.x,data.y,'eyedata')
+		            //socket.emit('calibration', data)                   
 		        })
 		        .begin()
 		        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          
