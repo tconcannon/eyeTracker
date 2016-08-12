@@ -19,11 +19,13 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server =  server || http.createServer(app);
+var server = server || http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+ console.log("[attaching handlers]")
 
 server.listen(port);
 server.on('error', onError);
@@ -48,6 +50,9 @@ function normalizePort(val) {
 
   return false;
 }
+
+console.log("[normalizing port]")
+
 
 /**
  * Event listener for HTTP server "error" event.
@@ -88,3 +93,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+console.log("[end of file]")

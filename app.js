@@ -9,9 +9,11 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
+// console.log(http);
+// console.log("http listen", http.listen);
 
 
 // view engine setup
@@ -54,8 +56,11 @@ var yOff=0;
 io.on('connection', function(socket){
   socket.on('gaze', function(data, clock){
       if(data){
-        //robot.moveMouse(data.x,data.y)
-        console.log('moce')
+        //var mouse = robot.getMousePos()
+        //console.log(mouse.x,mouse.y,'mouse')
+        //console.log('test')
+        robot.moveMouse(data.x,data.y)
+        //console.log('moce')
          // x.push(data.x)
          // y.push(data.y)
           
@@ -179,5 +184,5 @@ app.use(function(err, req, res, next) {
 
 module.exports = {
   app: app,
-  server: server
+  server: http
 };
