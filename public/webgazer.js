@@ -1031,6 +1031,7 @@ var objectdetect = (function() {
     var requestId;
     var requestAnimationFrame_ = function() {
       requestId = window.requestAnimationFrame(function() {
+      	console.log('animation')
         if (element.readyState === element.HAVE_ENOUGH_DATA) {
           try {
             // Firefox v~30.0 gets confused with the video readyState firing an
@@ -1040,9 +1041,9 @@ var objectdetect = (function() {
           } catch (err) {}
           tracking.trackCanvasInternal_(canvas, tracker);
         }
-        requestAnimationFrame_();
+        setTimeout(requestAnimationFrame_(),1000);
       });
-    };
+    }
 
     var task = new tracking.TrackerTask(tracker);
     task.on('stop', function() {
@@ -3249,14 +3250,15 @@ tracking.ViolaJones.classifiers.eye=new Float64Array([20,20,-1.4562760591506958,
  * Provides requestAnimationFrame in a cross browser way.
  */
 window.requestAnimFrame = (function() {
-  return window.requestAnimationFrame ||
-         window.webkitRequestAnimationFrame ||
-         window.mozRequestAnimationFrame ||
-         window.oRequestAnimationFrame ||
-         window.msRequestAnimationFrame ||
-         function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
-           return window.setTimeout(callback, 1000/60);
-         };
+	console.log('anim')
+  return window.requestAnimationFrame //||
+         // window.webkitRequestAnimationFrame ||
+         // window.mozRequestAnimationFrame ||
+         // window.oRequestAnimationFrame ||
+         // window.msRequestAnimationFrame //||
+         // function(/* function FrameRequestCallback */ callback,  DOMElement Element  element) {
+         //   return window.setTimeout(callback, 1000/60);
+         // };
 })();
 
 /**
@@ -6044,14 +6046,15 @@ var clm = {
 		}
 		
 		var requestAnimFrame = (function() {
+			console.log('anim2')
 			return window.requestAnimationFrame ||
 			window.webkitRequestAnimationFrame ||
 			window.mozRequestAnimationFrame ||
 			window.oRequestAnimationFrame ||
-			window.msRequestAnimationFrame ||
-			function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
-				return window.setTimeout(callback, 1000/60);
-			};
+			window.msRequestAnimationFrame //||
+			// function(/* function FrameRequestCallback */ callback,  DOMElement Element  element) {
+			// 	return window.setTimeout(callback, 1000/60);
+			// };
 		})();
 		
 		var cancelRequestAnimFrame = (function() {
@@ -10378,6 +10381,7 @@ if (typeof exports !== 'undefined') {
             //setTimeout(loop, webgazer.params.dataTimestep);
             requestAnimationFrame(loop);
         }
+
     }
 
     /**
@@ -10402,7 +10406,7 @@ if (typeof exports !== 'undefined') {
      * records click data and passes it to the regression model
      */
     var clickListener = function(event) {
-    	console.log('clickListener')
+    	//console.log('clickListener')
         recordScreenPosition(event.clientX, event.clientY, eventTypes[0]); // eventType[0] === 'click'
     }
 
@@ -10410,7 +10414,7 @@ if (typeof exports !== 'undefined') {
      * records mouse movement data and passes it to the regression model
      */
     var moveListener = function(event) {
-    	console.log('moveListener')
+    	//console.log('moveListener') 
         if (paused) {
             return;
         }

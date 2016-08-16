@@ -33,11 +33,13 @@ app.use('/users', users);
 var robot = require("robotjs");
 //Speed up the mouse.
 
+//csv
+var csv=require('csv')
+
 var screenSize = robot.getScreenSize();
 var height = screenSize.height;
 var width = screenSize.width;
-// var x=[];
-// var y=[];
+
 var circleBuffer=function(size){
   this.items=[];
   this.maxSize=size;
@@ -59,6 +61,8 @@ circleBuffer.prototype.push=function(item){
   }
 }
 var pos = new circleBuffer(50);
+var mouse=[];
+var eye=[];
 io.on('connection', function(socket){
   socket.on('gaze', function(data, clock){
       if(data){
@@ -78,9 +82,25 @@ io.on('connection', function(socket){
         }
         
       }
-        
-  })
-})
+    })
+      setTimeout(function(){socket.on('calibration', function(data){
+        var m=robot.getMousePos();
+      if(data){
+        eye.push(data.x,data.y)
+        mouse.push(m.x,m.y)
+        csv()
+        .to.file('my.csv', {flags:'r+'})
+        .write([data.x,data.y,m.x,m.y])
+        .end()
+      }
+      if(eye.length===100){
+        console.log(eye,'eye')
+        console.log(mouse,'mouse')
+      }
+    })},5000)
+    })
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
