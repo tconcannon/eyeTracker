@@ -34,7 +34,14 @@ var robot = require("robotjs");
 //Speed up the mouse.
 
 //csv
-var csv=require('csv')
+var fs = require('fs');
+var wstream = fs.createWriteStream('my.csv');
+var csv=require('csv');
+
+// var csvWriter = csv.to.file('my.csv', {flags:'a+'});
+var csvWriter = csv.stringify();
+// set up pipeline
+csvWriter.pipe(wstream);
 
 var screenSize = robot.getScreenSize();
 var height = screenSize.height;
@@ -88,16 +95,18 @@ io.on('connection', function(socket){
       if(data){
         eye.push(data.x,data.y)
         mouse.push(m.x,m.y)
-        csv()
-        .to.file('my.csv', {flags:'r+'})
-        .write([data.x,data.y,m.x,m.y])
-        .end()
+        
+        csvWriter.write([data.x,data.y,m.x,m.y])
       }
       if(eye.length===100){
         console.log(eye,'eye')
         console.log(mouse,'mouse')
       }
     })},5000)
+
+      socket.on('disconnect', function(socket){
+        setTimeout(function(){csvWriter.end()},500)
+      })
     })
 
 
