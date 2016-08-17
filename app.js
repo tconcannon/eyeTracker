@@ -36,12 +36,15 @@ var robot = require("robotjs");
 //csv
 var fs = require('fs');
 var wstream = fs.createWriteStream('my.csv');
+var wstream2 = fs.createWriteStream('read.csv');
 var csv=require('csv');
 
 // var csvWriter = csv.to.file('my.csv', {flags:'a+'});
 var csvWriter = csv.stringify();
+var csvWriter2 = csv.stringify();
 // set up pipeline
 csvWriter.pipe(wstream);
+csvWriter2.pipe(wstream2);
 
 var screenSize = robot.getScreenSize();
 var height = screenSize.height;
@@ -86,26 +89,21 @@ io.on('connection', function(socket){
           var mouseY = pos.items[0][1]*.8
         }
         robot.moveMouse(mouseX,mouseY);
+        csvWriter2.write([data.x,data.y,mouseX,mouseY])
         }
         
       }
     })
       setTimeout(function(){socket.on('calibration', function(data){
         var m=robot.getMousePos();
-      if(data){
-        eye.push(data.x,data.y)
-        mouse.push(m.x,m.y)
-        
+      if(data){        
         csvWriter.write([data.x,data.y,m.x,m.y])
-      }
-      if(eye.length===100){
-        console.log(eye,'eye')
-        console.log(mouse,'mouse')
       }
     })},5000)
 
       socket.on('disconnect', function(socket){
         setTimeout(function(){csvWriter.end()},500)
+        setTimeout(function(){csvWriter2.end()},500)
       })
     })
 
