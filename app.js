@@ -33,81 +33,54 @@ app.use('/users', users);
 var robot = require("robotjs");
 //Speed up the mouse.
 
-//csv
-var fs = require('fs');
-var wstream = fs.createWriteStream('my.csv');
-var wstream2 = fs.createWriteStream('read.csv');
-var csv=require('csv');
+// var screenSize = robot.getScreenSize();
+// var height = screenSize.height;
+// var width = screenSize.width;
+// // var x=[];
+// // var y=[];
+// var circleBuffer=function(size){
+//   this.items=[];
+//   this.maxSize=size;
+//   this.replacementIndex=0;
+//   this.full=false;
+// }
+// circleBuffer.prototype.push=function(item){
+//   this.full=false;
+//   if(this.items.length<this.maxSize){
+//     this.items.push(item)
+//   }
+//   else{
+//     this.full=true;
+//     this.items[this.replacementIndex]=item
+//     this.replacementIndex++
+//     if(this.replacementIndex===this.maxSize){
+//       this.replacementIndex=0
+//     }
+//   }
+// }
+// var pos = new circleBuffer(50);
+// io.on('connection', function(socket){
+//   socket.on('gaze', function(data, clock){
+//       if(data){
 
-// var csvWriter = csv.to.file('my.csv', {flags:'a+'});
-var csvWriter = csv.stringify();
-var csvWriter2 = csv.stringify();
-// set up pipeline
-csvWriter.pipe(wstream);
-csvWriter2.pipe(wstream2);
-
-var screenSize = robot.getScreenSize();
-var height = screenSize.height;
-var width = screenSize.width;
-
-var circleBuffer=function(size){
-  this.items=[];
-  this.maxSize=size;
-  this.replacementIndex=0;
-  this.full=false;
-}
-circleBuffer.prototype.push=function(item){
-  this.full=false;
-  if(this.items.length<this.maxSize){
-    this.items.push(item)
-  }
-  else{
-    this.full=true;
-    this.items[this.replacementIndex]=item
-    this.replacementIndex++
-    if(this.replacementIndex===this.maxSize){
-      this.replacementIndex=0
-    }
-  }
-}
-var pos = new circleBuffer(50);
-var mouse=[];
-var eye=[];
-io.on('connection', function(socket){
-  socket.on('gaze', function(data, clock){
-      if(data){
-
-        pos.push([data.x,data.y])
-        if(pos.full){
-        //var mouse = robot.getMousePos()
-        if(pos.replacementIndex){
-        var mouseX = pos.items[pos.replacementIndex][0]*.8
-        var mouseY = pos.items[pos.replacementIndex][1]*.8  
-        }
-        else{
-          var mouseX = pos.items[0][0]*.8;
-          var mouseY = pos.items[0][1]*.8
-        }
-        robot.moveMouse(mouseX,mouseY);
-        csvWriter2.write([data.x,data.y,mouseX,mouseY])
-        }
+//         pos.push([data.x,data.y])
+//         if(pos.full){
+//         //var mouse = robot.getMousePos()
+//         if(pos.replacementIndex){
+//         var mouseX = pos.items[pos.replacementIndex][0]*.8
+//         var mouseY = pos.items[pos.replacementIndex][1]*.8  
+//         }
+//         else{
+//           var mouseX = pos.items[0][0]*.8;
+//           var mouseY = pos.items[0][1]*.8
+//         }
+//         robot.moveMouse(mouseX,mouseY);
+//         }
         
-      }
-    })
-      setTimeout(function(){socket.on('calibration', function(data){
-        var m=robot.getMousePos();
-      if(data){        
-        csvWriter.write([data.x,data.y,m.x,m.y])
-      }
-    })},5000)
-
-      socket.on('disconnect', function(socket){
-        setTimeout(function(){csvWriter.end()},500)
-        setTimeout(function(){csvWriter2.end()},500)
-      })
-    })
-
-
+//       }
+        
+//   })
+// })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -141,19 +114,19 @@ app.use(function(err, req, res, next) {
 });
 
 // // For arduino stuff
-// var serialport = require('serialport');
-// var portName = 'COM5';
-// var sp = new serialport.SerialPort(portName, {
-//     baudRate: 9600,
-//     dataBits: 8,
-//     parity: 'none',
-//     stopBits: 1,
-//     flowControl: false,
-//     parser: serialport.parsers.readline("\r\n")
-// });
+var serialport = require('serialport');
+var portName = 'COM5';
+var sp = new serialport.SerialPort(portName, {
+    baudRate: 9600,
+    dataBits: 8,
+    parity: 'none',
+    stopBits: 1,
+    flowControl: false,
+    parser: serialport.parsers.readline("\r\n")
+});
 
-// sp.on('data', function(input) {
-//   //console.log(input);
+sp.on('data', function(input) {
+  //console.log(input);
 
 //   // For calibration testing
 //   if (input === "left_click") {
@@ -161,37 +134,34 @@ app.use(function(err, req, res, next) {
 //     console.log(position);
 //   }
 
-//   // if (input === "mouse") {
-//   //   robot.mouseClick();
-//   // }
-//   // if (input === "left_click") {
-//   //   robot.mouseToggle("down");
-//   // }
-//   // if (input === "left_unclick") {
-//   //   robot.mouseToggle("up");
-//   // }
-//   // if (input === "right_click") {
-//   //   robot.mouseToggle("down", "right");
-//   // }
-//   // if (input === "right_unclick") {
-//   //   robot.mouseToggle("up", "right");
-//   // }
-//   // if (input < 300 && input > 150) {
-//   //   robot.scrollMouse(1, "down");  
-//   // }
-//   // if (input < 150) {
-//   //   robot.scrollMouse(3, "down");
-//   // }
-//   // if (input > 600 && input < 850) {
-//   //   robot.scrollMouse(1, "up");
-//   // }
-//   // if (input > 850) {
-//   //   robot.scrollMouse(3, "up");
-//   // }
-
-
-  
-// });
+  // if (input === "mouse") {
+  //   robot.mouseClick();
+  // }
+  if (input === "left_click") {
+    robot.mouseToggle("down");
+  }
+  if (input === "left_unclick") {
+    robot.mouseToggle("up");
+  }
+  if (input === "right_click") {
+    robot.mouseToggle("down", "right");
+  }
+  if (input === "right_unclick") {
+    robot.mouseToggle("up", "right");
+  }
+  if (input < 300 && input > 150) {
+    robot.scrollMouse(1, "down");  
+  }
+  if (input < 150) {
+    robot.scrollMouse(3, "down");
+  }
+  if (input > 600 && input < 850) {
+    robot.scrollMouse(1, "up");
+  }
+  if (input > 850) {
+    robot.scrollMouse(3, "up");
+  }  
+});
 
 
 module.exports = {
