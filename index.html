@@ -46,21 +46,28 @@
 		    // if(webgazer.clickListener){
 		    //     console.log('true')
 		    // }
+		    var isCalibrating = true;
 		    webgazer.setRegression('weightedRidge')  //currently must set regression and tracker 
 		            .setTracker('clmtrackr')
 		            .setGazeListener(function(data, clock) {
-		            setTimeout(function(){
-		            webgazer.removeMouseEventListeners()
-		            //webgazer.showPredictionPoints(false)
-								socket.emit('gaze',data)
-								//ipc.send('gaze', data, clock)
-		            },180000) 
-		            //console.log(data.x,data.y,'eyedata')
-		            socket.emit('calibration', data)                   
-		        })
-		        .begin()
-		        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */          
+		            	console.log("sending data");
+		            	if (isCalibrating) {
+				            socket.emit('calibration', data) 
+		            	} else {
+		            		webgazer.removeMouseEventListeners();
+							socket.emit('gaze',data)
+		            	}
+		            })
+			        .begin()
+			        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
 
+			setTimeout(function(){
+	            //console.log(data.x,data.y,'eyedata')                  
+		        webgazer.removeMouseEventListeners();
+		        isCalibrating = false;
+	            //webgazer.showPredictionPoints(false)
+				//ipc.send('gaze', data, clock)
+            }, 30000) 
 		    var width = 320;
 		    var height = 240;
 		    var topDist = '0px';

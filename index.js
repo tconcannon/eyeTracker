@@ -29,7 +29,7 @@ function createMainWindow() {
 	//window.TIME for globally
 	setTimeout(function(){
 		win.setIgnoreMouseEvents(true);
-	},180000)
+	},30000)
 	
 	win.loadURL(`file://${__dirname}/index.html`);
 	win.on('closed', onClosed);

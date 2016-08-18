@@ -59,9 +59,9 @@ var robot = require("robotjs");
 //   }
 // }
 // var pos = new circleBuffer(50);
-// io.on('connection', function(socket){
-//   socket.on('gaze', function(data, clock){
-//       if(data){
+ io.on('connection', function(socket){
+   socket.on('gaze', function(data, clock){
+       if(data){
 
 //         pos.push([data.x,data.y])
 //         if(pos.full){
@@ -76,11 +76,13 @@ var robot = require("robotjs");
 //         }
 //         robot.moveMouse(mouseX,mouseY);
 //         }
+        var mouseX=data.x*.959-37.243;
+        var mouseY=data.y*.852+2.363;
+        robot.moveMouseSmooth(mouseX,mouseY);
+      }
         
-//       }
-        
-//   })
-// })
+  })
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -113,55 +115,55 @@ app.use(function(err, req, res, next) {
   });
 });
 
-// // For arduino stuff
-var serialport = require('serialport');
-var portName = 'COM5';
-var sp = new serialport.SerialPort(portName, {
-    baudRate: 9600,
-    dataBits: 8,
-    parity: 'none',
-    stopBits: 1,
-    flowControl: false,
-    parser: serialport.parsers.readline("\r\n")
-});
+// // // For arduino stuff
+// var serialport = require('serialport');
+// var portName = 'COM5';
+// var sp = new serialport.SerialPort(portName, {
+//     baudRate: 9600,
+//     dataBits: 8,
+//     parity: 'none',
+//     stopBits: 1,
+//     flowControl: false,
+//     parser: serialport.parsers.readline("\r\n")
+// });
 
-sp.on('data', function(input) {
-  //console.log(input);
+// sp.on('data', function(input) {
+//   //console.log(input);
 
-//   // For calibration testing
+// //   // For calibration testing
+// //   if (input === "left_click") {
+// //     var position = getMousePos();
+// //     console.log(position);
+// //   }
+
+//   // if (input === "mouse") {
+//   //   robot.mouseClick();
+//   // }
 //   if (input === "left_click") {
-//     var position = getMousePos();
-//     console.log(position);
+//     robot.mouseToggle("down");
 //   }
-
-  // if (input === "mouse") {
-  //   robot.mouseClick();
-  // }
-  if (input === "left_click") {
-    robot.mouseToggle("down");
-  }
-  if (input === "left_unclick") {
-    robot.mouseToggle("up");
-  }
-  if (input === "right_click") {
-    robot.mouseToggle("down", "right");
-  }
-  if (input === "right_unclick") {
-    robot.mouseToggle("up", "right");
-  }
-  if (input < 300 && input > 150) {
-    robot.scrollMouse(1, "down");  
-  }
-  if (input < 150) {
-    robot.scrollMouse(3, "down");
-  }
-  if (input > 600 && input < 850) {
-    robot.scrollMouse(1, "up");
-  }
-  if (input > 850) {
-    robot.scrollMouse(3, "up");
-  }  
-});
+//   if (input === "left_unclick") {
+//     robot.mouseToggle("up");
+//   }
+//   if (input === "right_click") {
+//     robot.mouseToggle("down", "right");
+//   }
+//   if (input === "right_unclick") {
+//     robot.mouseToggle("up", "right");
+//   }
+//   if (input < 300 && input > 150) {
+//     robot.scrollMouse(1, "down");  
+//   }
+//   if (input < 150) {
+//     robot.scrollMouse(3, "down");
+//   }
+//   if (input > 600 && input < 850) {
+//     robot.scrollMouse(1, "up");
+//   }
+//   if (input > 850) {
+//     robot.scrollMouse(3, "up");
+//   }  
+// });
 
 
 module.exports = {
